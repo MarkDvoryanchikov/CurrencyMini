@@ -1,18 +1,7 @@
 <?php
 
 require "CbrHelper.php";
-
-
-// Конфигурация
-$db_host = 'localhost';
-$db_port = '3306';
-$db_name = "currency";
-$db_user = 'mysql';
-$db_pass = 'mysql';
-
-
-
-$url = "http://www.cbr-xml-daily.ru/daily_json.js";
+require "config.php";
 
 $db = new PDO("mysql:host=$db_host;port=$db_port", $db_user, $db_pass);
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -25,6 +14,7 @@ try {
     $q = $db->exec("CREATE TABLE IF NOT EXISTS valute (
                                 pk_valute VARCHAR(3) NOT NULL  PRIMARY KEY,
                                 active VARCHAR(1) NOT NULL,
+                                name VARCHAR(50) NOT NULL,
                                 valute_value DECIMAL(6,4) NOT NULL,
                                 previous DECIMAL(6,4) NOT NULL
     )");
@@ -37,29 +27,30 @@ try {
 
 
 $iLoRo = CbrHelper::getJSON($url);
-$arrayIn = array('CharCode','Value','Previous');
+$arrayIn = array('CharCode','Name','Value','Previous');
 $arrayOut = CbrHelper::decodeJSON($iLoRo, $arrayIn);
 $i = 0;
+
 try {
     $q = $db->exec("DELETE FROM valute");
 } catch (PDOException $e) {
     print "Чистка таблицы не удалась: " . $e->getMessage();
 }
 do {
-    $j=$i+1; $k=$i+2;
+    $j=$i+1; $k=$i+2; $l=$i+2;
     try {
-        $q = $db->exec("INSERT INTO valute (`pk_valute`, `active`, `valute_value`, `previous`)
-                                        VALUES ('$arrayOut[$i]', '0', '$arrayOut[$j]', '$arrayOut[$k]')");
+        $q = $db->exec("INSERT INTO valute (`pk_valute`, `active`, `name`, `valute_value`, `previous`)
+                                        VALUES ('$arrayOut[$i]', '0', '$arrayOut[$j]', '$arrayOut[$k]', '$arrayOut[$l]')");
     } catch (PDOException $e) {
         print "Не удалось заполнить таблицу валют: " . $e->getMessage();
     }
-    $i+=3;
+    $i+=4;
 } while ($i < count($arrayOut));
 // т.е. получается при обновлении стираются все сведения о выбранных отслеживаемых валютах.
 
 
 try {
-    $q = $db->exec("UPDATE valute SET active=1 WHERE pk_valute='USD' OR pk_valute='EUR'");
+    $q = $db->exec("UPDATE valute SET active=1 WHERE pk_valute='USD' OR pk_valute='EUR' OR pk_valute='JPY'");
 } catch (PDOException $e) {
     print "Не удалось задать валюты по умолчанию: " . $e->getMessage();
 }
@@ -83,3 +74,5 @@ try {
 } catch (PDOException $e) {
     print "Не удалось извлечь данные об отслеживаемых валютах: " . $e->getMessage();
 }
+
+

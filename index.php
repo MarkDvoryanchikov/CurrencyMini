@@ -10,22 +10,23 @@
         <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="main.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <!--    <script type="text/javascript" src="valute.js"></script>-->
+        <script type="text/javascript" src="valute.js"></script>
     </head>
     <body>
         <div class="container">
             <div id="content">
 
                 <div class="valute">
-<!--                    <div id="USD"></div>-->
-<!--                    <div id="EUR"></div>-->
                     <div>
                         <label for="valutes">Добавить для отслеживания:</label>
                         <select class="form-control" id="valutes">
-<?php foreach ($activeNot as $value) { ?>
-                            <option value='<?php echo $value[pk_valute] ?>'><?php echo $value[pk_valute] ?></option>
-<?php } ?>
+
+<?php foreach ($activeNot as $value) : ?>
+                            <option value='<?php echo $value['pk_valute'] ?>'><?php echo $value['pk_valute']." - ".$value['name'] ?></option>
+<?php endforeach; ?>
+
                         </select>
                         <input class="btn btn-success btn-block" id="add" type="button" value="Добавить">
                     </div>
@@ -54,23 +55,24 @@
                                 <th>Не отслеживать</th>
                             </tr>
                         </thead>
-                        <tbody>
-<?php foreach ($active as $value) { ?>
+                        <tbody id="valutes-info">
+
+<?php foreach ($active as $value) : ?>
                             <tr>
                                 <td><?php echo "$value[pk_valute]" ?></td>
                                 <td><?php echo "$value[valute_value]" ?></td>
                                 <td><?php echo "$value[previous]" ?></td>
                                 <td>
-                                    <input class="btn btn-danger btn-xs" id='delete' type='button' name='<?php echo "$value[pk_valute]" ?>' value='X'>
+                                    <input class="btn btn-danger btn-xs delete-button" type='button' name='<?php echo "$value[pk_valute]" ?>' value='X'>
                                 </td>
                             </tr>
-<?php } ?>
+<?php endforeach; ?>
+
                         </tbody>
                     </table>
                 </div>
 
-                <div id="time">Время последней синхронизации: </div>
-
+                <div>Время последней синхронизации: <span id="time"></span></div>
             </div>
         </div>
     </body>
