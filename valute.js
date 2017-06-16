@@ -33,7 +33,8 @@ $(document).ready(function() {
 
     $('#add').click(function() {
         var val = $('#valutes').find('option:selected').val();
-        uploadPlease(val,"add");
+        if (val !== undefined)
+            uploadPlease(val,"add");
     });
 
     $('#update').click(function() {
@@ -49,29 +50,34 @@ $(document).ready(function() {
 });
 
 function uploadPlease(val,command) {
+
     $.ajax({
         url: 'action.php',
         type: 'POST',
         data: { val : val, command: command},
         dataType: 'text',
         success: function(data){
-            var result = $.parseJSON(data);
-            var a = $("#valutes-info");
+            var a = $("#valutes-info"),
+                b = $("#valutes");
             a.empty();
-            for(var k in result.data1) {
-                a.append("<tr>"+
-                    "<td>"+result.data1[k].pk_valute+"</td>"+
-                    "<td>"+result.data1[k].valute_value+"</td>"+
-                    "<td>"+result.data1[k].previous+"</td>"+
-                    "<td><input class='btn btn-danger btn-xs delete-button'"+
-                    "type='button' name="+result.data1[k].pk_valute+" value='X'></td>"+
-                    "</tr>");
-            }
-            var b = $("#valutes");
             b.empty();
-            for(var k in result.data2) {
-                b.append("<option value="+result.data2[k].pk_valute+">"+ result.data2[k].pk_valute+" - "+
-                    result.data2[k].name+"</option>")
+            var result = $.parseJSON(data);
+            if (result.data1 != "empty"){
+                for (var k in result.data1) {
+                    a.append("<tr>" +
+                        "<td>" + result.data1[k].pk_valute + "</td>" +
+                        "<td>" + result.data1[k].valute_value + "</td>" +
+                        "<td>" + result.data1[k].previous + "</td>" +
+                        "<td><input class='btn btn-danger btn-xs delete-button'" +
+                        "type='button' name=" + result.data1[k].pk_valute + " value='X'></td>" +
+                        "</tr>");
+                }
+            }
+            if (result.data2 != "empty") {
+                for (k in result.data2) {
+                    b.append("<option value=" + result.data2[k].pk_valute + ">" + result.data2[k].pk_valute + " - " +
+                        result.data2[k].name + "</option>")
+                }
             }
         }
     });

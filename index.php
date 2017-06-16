@@ -72,7 +72,7 @@
                     </table>
                 </div>
 
-                <div>Время последней синхронизации: <span id="time"></span></div>
+                <div>Время последней синхронизации с сервером: <span id="time"></span> ; с cbr-xml-daily: </div>
             </div>
         </div>
     </body>

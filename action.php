@@ -29,7 +29,6 @@ if (isset($_POST['val']) && $_POST['command']=="del"){
 
 
 
-
 function dataForHTML($db) {
     $active = $db->query("SELECT * FROM valute WHERE active=1");
     foreach ($active as $value) {
@@ -48,6 +47,8 @@ function dataForHTML($db) {
                 'name' => $value['name']
             ];
     }
+    if (empty($mainarr)) $mainarr[] = "empty";
+    if (empty($mainarr2)) $mainarr2[] = "empty";
     $data["data1"] = $mainarr;
     $data["data2"] = $mainarr2;
     print $data1 = json_encode($data, JSON_UNESCAPED_UNICODE);
