@@ -30,6 +30,7 @@ $(document).ready(function() {
     var date = new Date();
     $("#time").text(date.toLocaleString());
 
+    getData();
 
     $('#add').click(function() {
         var val = $('#valutes').find('option:selected').val();
@@ -38,6 +39,7 @@ $(document).ready(function() {
     });
 
     $('#update').click(function() {
+        getData();
     });
 
 
@@ -49,34 +51,67 @@ $(document).ready(function() {
 
 });
 
+function getData() {
+    $.ajax({
+        url: 'action.php',
+        type: 'POST',
+        data: { command: 'update'},
+        dataType: 'json',
+        success: function(data){
+            var a = $("#valutes-info"),
+                b = $("#valutes");
+            a.empty();
+            b.empty();
+            if (data.data1 !== "empty"){
+                for (var k in data.data1) {
+                    a.append("<tr>" +
+                        "<td>" + data.data1[k].pk_valute + "</td>" +
+                        "<td>" + data.data1[k].valute_value + "</td>" +
+                        "<td>" + data.data1[k].previous + "</td>" +
+                        "<td><input class='btn btn-danger btn-xs delete-button'" +
+                        "type='button' name=" + data.data1[k].pk_valute + " value='X'></td>" +
+                        "</tr>");
+                }
+            }
+            if (data.data2 !== "empty") {
+                for (k in data.data2) {
+                    b.append("<option value=" + data.data2[k].pk_valute + ">" + data.data2[k].pk_valute + " - " +
+                        data.data2[k].name + "</option>")
+                }
+            }
+            var date = new Date();
+            $("#time").text(date.toLocaleString());
+        }
+    });
+}
+
 function uploadPlease(val,command) {
 
     $.ajax({
         url: 'action.php',
         type: 'POST',
         data: { val : val, command: command},
-        dataType: 'text',
+        dataType: 'json',
         success: function(data){
             var a = $("#valutes-info"),
                 b = $("#valutes");
             a.empty();
             b.empty();
-            var result = $.parseJSON(data);
-            if (result.data1 != "empty"){
-                for (var k in result.data1) {
+            if (data.data1 !== "empty"){
+                for (var k in data.data1) {
                     a.append("<tr>" +
-                        "<td>" + result.data1[k].pk_valute + "</td>" +
-                        "<td>" + result.data1[k].valute_value + "</td>" +
-                        "<td>" + result.data1[k].previous + "</td>" +
+                        "<td>" + data.data1[k].pk_valute + "</td>" +
+                        "<td>" + data.data1[k].valute_value + "</td>" +
+                        "<td>" + data.data1[k].previous + "</td>" +
                         "<td><input class='btn btn-danger btn-xs delete-button'" +
-                        "type='button' name=" + result.data1[k].pk_valute + " value='X'></td>" +
+                        "type='button' name=" + data.data1[k].pk_valute + " value='X'></td>" +
                         "</tr>");
                 }
             }
-            if (result.data2 != "empty") {
-                for (k in result.data2) {
-                    b.append("<option value=" + result.data2[k].pk_valute + ">" + result.data2[k].pk_valute + " - " +
-                        result.data2[k].name + "</option>")
+            if (data.data2 !== "empty") {
+                for (k in data.data2) {
+                    b.append("<option value=" + data.data2[k].pk_valute + ">" + data.data2[k].pk_valute + " - " +
+                        data.data2[k].name + "</option>")
                 }
             }
         }

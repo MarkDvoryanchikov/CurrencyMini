@@ -23,9 +23,7 @@
                         <label for="valutes">Добавить для отслеживания:</label>
                         <select class="form-control" id="valutes">
 
-<?php foreach ($activeNot as $value) : ?>
-                            <option value='<?php echo $value['pk_valute'] ?>'><?php echo $value['pk_valute']." - ".$value['name'] ?></option>
-<?php endforeach; ?>
+
 
                         </select>
                         <input class="btn btn-success btn-block" id="add" type="button" value="Добавить">
@@ -57,16 +55,7 @@
                         </thead>
                         <tbody id="valutes-info">
 
-<?php foreach ($active as $value) : ?>
-                            <tr>
-                                <td><?php echo "$value[pk_valute]" ?></td>
-                                <td><?php echo "$value[valute_value]" ?></td>
-                                <td><?php echo "$value[previous]" ?></td>
-                                <td>
-                                    <input class="btn btn-danger btn-xs delete-button" type='button' name='<?php echo "$value[pk_valute]" ?>' value='X'>
-                                </td>
-                            </tr>
-<?php endforeach; ?>
+
 
                         </tbody>
                     </table>

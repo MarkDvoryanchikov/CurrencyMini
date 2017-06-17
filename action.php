@@ -5,11 +5,12 @@ $db = new PDO("mysql:dbname=$db_name;host=$db_host;port=$db_port", $db_user, $db
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
-if (isset($_POST['val']) && $_POST['command']=="add"){
-    $addValute = $_POST['val'];
 
+
+if (isset($_POST['val']) && $_POST['command']=="add"){
     try {
-        $q = $db->exec("UPDATE valute SET active=1 WHERE pk_valute='$addValute';");
+        $q = $db->prepare("UPDATE valute SET active=1 WHERE pk_valute=(?);");
+        $q->execute(array($_POST['val']));
     } catch (PDOException $e) {
         print "Не удалось добавить валюту для отслеживания: " . $e->getMessage();
     }
@@ -17,16 +18,18 @@ if (isset($_POST['val']) && $_POST['command']=="add"){
 }
 
 if (isset($_POST['val']) && $_POST['command']=="del"){
-    $delValute = $_POST['val'];
-
     try {
-        $q = $db->exec("UPDATE valute SET active=0 WHERE pk_valute='$delValute';");
+        $q = $db->prepare("UPDATE valute SET active=0 WHERE pk_valute=(?);");
+        $q->execute(array($_POST['val']));
     } catch (PDOException $e) {
         print "Не удалось убрать отслеживаемую валюту: " . $e->getMessage();
     }
     dataForHTML($db);
 }
 
+if ($_POST['command']=="update"){
+    dataForHTML($db);
+}
 
 
 function dataForHTML($db) {

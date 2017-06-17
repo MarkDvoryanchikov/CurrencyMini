@@ -22,57 +22,39 @@ try {
     print "Не удалось выполнить инициацию: " . $e->getMessage();
 }
 
-
-
-
-
 $iLoRo = CbrHelper::getJSON($url);
 $arrayIn = array('CharCode','Name','Value','Previous');
 $arrayOut = CbrHelper::decodeJSON($iLoRo, $arrayIn);
 $i = 0;
 
 try {
-    $q = $db->exec("DELETE FROM valute");
-} catch (PDOException $e) {
-    print "Чистка таблицы не удалась: " . $e->getMessage();
-}
-do {
-    $j=$i+1; $k=$i+2; $l=$i+2;
-    try {
-        $q = $db->exec("INSERT INTO valute (`pk_valute`, `active`, `name`, `valute_value`, `previous`)
-                                        VALUES ('$arrayOut[$i]', '0', '$arrayOut[$j]', '$arrayOut[$k]', '$arrayOut[$l]')");
-    } catch (PDOException $e) {
-        print "Не удалось заполнить таблицу валют: " . $e->getMessage();
+    $count=$db->query("SELECT COUNT(*) as count FROM valute")->fetchColumn();
+    if ($count == 0) {
+        try {
+            $db->exec("DELETE FROM valute");
+        } catch (PDOException $e) {
+            print "Чистка таблицы не удалась: " . $e->getMessage();
+        }
+
+        do {
+            $j = $i + 1;
+            $k = $i + 2;
+            $l = $i + 3;
+            try {
+                $db->exec("INSERT INTO valute (`pk_valute`, `active`, `name`, `valute_value`, `previous`)
+                                            VALUES ('$arrayOut[$i]', '0', '$arrayOut[$j]', '$arrayOut[$k]', '$arrayOut[$l]')");
+            } catch (PDOException $e) {
+                print "Не удалось заполнить таблицу валют: " . $e->getMessage();
+            }
+            $i += 4;
+        } while ($i < count($arrayOut));
+
+        try {
+            $db->exec("UPDATE valute SET active=1 WHERE pk_valute='USD' OR pk_valute='EUR' OR pk_valute='JPY'");
+        } catch (PDOException $e) {
+            print "Не удалось задать валюты по умолчанию: " . $e->getMessage();
+        }
     }
-    $i+=4;
-} while ($i < count($arrayOut));
-// т.е. получается при обновлении стираются все сведения о выбранных отслеживаемых валютах.
-
-
-try {
-    $q = $db->exec("UPDATE valute SET active=1 WHERE pk_valute='USD' OR pk_valute='EUR' OR pk_valute='JPY'");
 } catch (PDOException $e) {
-    print "Не удалось задать валюты по умолчанию: " . $e->getMessage();
+    print "Не удалось выполнить начальное заполнение таблицы: " . $e->getMessage();
 }
-
-
-try {
-    $activeNot = $db->query("SELECT * FROM valute WHERE active=0");
-//    foreach ($activeNot as $value) {
-//        echo  $value[pk_valute] . "<br/>";
-//    }
-} catch (PDOException $e) {
-    print "Не удалось извлечь список неактивных валют: " . $e->getMessage();
-}
-
-
-try {
-    $active = $db->query("SELECT * FROM valute WHERE active=1");
-//    foreach ($active as $value) {
-//        echo  $value[pk_valute] . " ". $value[active] ." ". $value[valute_value] ." ". $value[previous] . "<br/>";
-//    }
-} catch (PDOException $e) {
-    print "Не удалось извлечь данные об отслеживаемых валютах: " . $e->getMessage();
-}
-
-
