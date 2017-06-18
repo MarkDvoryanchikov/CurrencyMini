@@ -30,7 +30,7 @@ $(document).ready(function() {
     var date = new Date();
     $("#time").text(date.toLocaleString());
 
-    getData();
+    uploadPlease("","update");
 
     $('#add').click(function() {
         var val = $('#valutes').find('option:selected').val();
@@ -39,7 +39,7 @@ $(document).ready(function() {
     });
 
     $('#update').click(function() {
-        getData();
+        uploadPlease("","update");
     });
 
 
@@ -51,39 +51,6 @@ $(document).ready(function() {
 
 });
 
-function getData() {
-    $.ajax({
-        url: 'action.php',
-        type: 'POST',
-        data: { command: 'update'},
-        dataType: 'json',
-        success: function(data){
-            var a = $("#valutes-info"),
-                b = $("#valutes");
-            a.empty();
-            b.empty();
-            if (data.data1 !== "empty"){
-                for (var k in data.data1) {
-                    a.append("<tr>" +
-                        "<td>" + data.data1[k].pk_valute + "</td>" +
-                        "<td>" + data.data1[k].valute_value + "</td>" +
-                        "<td>" + data.data1[k].previous + "</td>" +
-                        "<td><input class='btn btn-danger btn-xs delete-button'" +
-                        "type='button' name=" + data.data1[k].pk_valute + " value='X'></td>" +
-                        "</tr>");
-                }
-            }
-            if (data.data2 !== "empty") {
-                for (k in data.data2) {
-                    b.append("<option value=" + data.data2[k].pk_valute + ">" + data.data2[k].pk_valute + " - " +
-                        data.data2[k].name + "</option>")
-                }
-            }
-            var date = new Date();
-            $("#time").text(date.toLocaleString());
-        }
-    });
-}
 
 function uploadPlease(val,command) {
 
@@ -114,6 +81,8 @@ function uploadPlease(val,command) {
                         data.data2[k].name + "</option>")
                 }
             }
+            var date = new Date();
+            $("#time").text(date.toLocaleString());
         }
     });
 }
