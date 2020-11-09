@@ -1,50 +1,21 @@
-/*
-$(document).ready(function() {
-    getValute();
-    var interval = $("#interval").val();
-    timeToChange(interval);
+$(document).ready(function() { 		// объявление функции ready на весь html doc
+    var date = new Date();			// присваивание текущего времени к переменной date 	
+    $("#time").text(date.toLocaleString());		//#
 
-    $("#interval").change(function(){
-        interval = $(this).val();
-        timeToChange(interval);
+    uploadPlease("","update");		//# вызов функции
+
+    $('#add').click(function() {	// объявление функции click на определенный элемент
+        var val = $('#valutes').find('option:selected').val(); // парс данных со страницы 
+        if (val !== undefined)	// условие на непустое значение
+            uploadPlease(val,"add"); // вызов функции
     });
 
-    $("#update").click(function() {
-        getValute();
-        timeToChange(interval);
-    });
-
-});
-
-
-var li;
-function timeToChange(interval) {
-    clearInterval(li);
-    li = setInterval(function(){
-        getValute();
-    }, interval*1000*60);
-}
-*/
-
-$(document).ready(function() {
-    var date = new Date();
-    $("#time").text(date.toLocaleString());
-
-    uploadPlease("","update");
-
-    $('#add').click(function() {
-        var val = $('#valutes').find('option:selected').val();
-        if (val !== undefined)
-            uploadPlease(val,"add");
-    });
-
-    $('#update').click(function() {
-        uploadPlease("","update");
+    $('#update').click(function() { // объявление функции click на определенный элемент
+        uploadPlease("","update"); // вызов функции
     });
 
 
-    //$('.delete-button').click(function() {
-    $('body').on('click', '.delete-button', function(){
+    $('body').on('click', '.delete-button', function(){ //объявление функции на тело html документа
         var val = $(this).attr('name');
         uploadPlease(val,"del");
     });
@@ -52,8 +23,8 @@ $(document).ready(function() {
 });
 
 
-function uploadPlease(val,command) {
-    $.ajax({
+function uploadPlease(val,command) { //обновление значений
+    $.ajax({ // парс данных и выполнение кода при успешном запросе
         url: 'action.php',
         type: 'POST',
         data: { val : val, command: command},
