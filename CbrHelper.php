@@ -1,6 +1,6 @@
 <?php
 
-class CbrHelper {
+class CbrHelper { //this is class that called cbrhelper
 
     public static function getJSON($url) {
         $c =curl_init('http://www.cbr-xml-daily.ru/daily_json.js');
