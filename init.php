@@ -20,8 +20,8 @@ try {
                                 num_code DECIMAL NOT NULL,
                                 nominal DECIMAL NOT NULL,
                                 name VARCHAR(100) NOT NULL,
-                                valute_value DECIMAL(8,6) NOT NULL,
-                                previous DECIMAL(8,6) NOT NULL
+                                valute_value DECIMAL(8,4) NOT NULL,
+                                previous DECIMAL(8,4) NOT NULL
     )");
 } catch (PDOException $e) {
     print "Не удалось выполнить инициацию: " . $e->getMessage();
