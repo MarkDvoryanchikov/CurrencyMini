@@ -67,6 +67,7 @@ function uploadPlease(val,command) {
                 for (var k in data.data1) {
                     a.append("<tr>" +
                         "<td>" + data.data1[k].pk_valute + "</td>" +
+                        "<td>" + data.data1[k].nominal + "</td>" +
                         "<td>" + data.data1[k].valute_value + "</td>" +
                         "<td>" + data.data1[k].previous + "</td>" +
                         "<td><input class='btn btn-danger btn-xs delete-button'" +

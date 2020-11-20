@@ -33,6 +33,7 @@ function dataForHTML($db) {
         $mainarr[$value['pk_valute']] =
             [
                 'pk_valute' => $value['pk_valute'],
+                'nominal' => $value['nominal'],
                 'valute_value' => $value['valute_value'],
                 'previous' => $value['previous']
             ];
